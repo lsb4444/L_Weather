@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Lweather</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="area_fragment">지역을 입력 해 주세요</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
