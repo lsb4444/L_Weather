@@ -9,7 +9,7 @@ import static android.R.attr.fragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SearchWeatherFragment mSerc;
+    private Fragment mSerc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
 //            mSerc = new SearchWeatherFragment();
-            mSerc = (SearchWeatherFragment) getSupportFragmentManager().findFragmentById(R.id.frag);
+            mSerc = getSupportFragmentManager().findFragmentById(R.id.frag);
 
 
             // 왜 겹칠까

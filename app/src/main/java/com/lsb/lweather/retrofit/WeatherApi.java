@@ -16,5 +16,5 @@ public interface WeatherApi {
     String APP_ID = "65159c855f57757fc6fc01e05c94557b";
 
     @GET("weather?lang=kr&units=metric&appid=" + APP_ID)
-   Call<Lweather> getLweather(@Query("q") String cityName);
+    Call<Lweather> getLweather(@Query("q") String cityName);
 }

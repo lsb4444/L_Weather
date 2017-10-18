@@ -35,6 +35,7 @@
                 android:layout_gravity="center">
 
                 <TextView
+                    android:id="@+id/city_name_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="지역" />
@@ -53,26 +54,22 @@
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/temp_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="기온" />
 
                     <TextView
-                        android:id="@+id/max_temp_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="최고기온" />
 
                     <TextView
-                        android:id="@+id/mim_temp_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="최저기온" />
 
 
                     <TextView
-                        android:id="@+id/weather_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="습도" />
@@ -87,21 +84,25 @@
                     android:padding="8dp">
 
                     <TextView
+                        android:id="@+id/temp_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ddddd" />
 
                     <TextView
+                        android:id="@+id/max_temp_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ddddd" />
 
                     <TextView
+                        android:id="@+id/mim_temp_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ddddd" />
 
                     <TextView
+                        android:id="@+id/weather_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ddddd" />

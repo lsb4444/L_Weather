@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lsb.lweather.viewPage.fragment.NowFragment;
+import com.lsb.lweather.viewPage.fragment.OneWeekFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +59,14 @@ public class NowWeatherFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new NowFragment();
+                case 1:
+                    return new OneWeekFragment();
+            }
+
+
             return null;
         }
 

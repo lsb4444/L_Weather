@@ -2,52 +2,55 @@
 package com.lsb.lweather.models.nowWeather;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class Main {
 
-    private Double temp;
-    private Integer pressure;
-    private Integer humidity;
-    private Double tempMin;
-    private Double tempMax;
+    private double temp;
+    private double pressure;
+    private double humidity;
+    @SerializedName("temp_min")
+    private double temp_Min;
+    @SerializedName("temp_max")
+    private double temp_Max;
 
-    public Double getTemp() {
+    public double getTemp() {
         return temp;
     }
 
-    public void setTemp(Double temp) {
+    public void setTemp(double temp) {
         this.temp = temp;
     }
 
-    public Integer getPressure() {
+    public double getPressure() {
         return pressure;
     }
 
-    public void setPressure(Integer pressure) {
+    public void setPressure(double pressure) {
         this.pressure = pressure;
     }
 
-    public Integer getHumidity() {
+    public double getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(Integer humidity) {
+    public void setHumidity(double humidity) {
         this.humidity = humidity;
     }
 
-    public Double getTempMin() {
-        return tempMin;
+    public double getTemp_Min() {
+        return temp_Min;
     }
 
-    public void setTempMin(Double tempMin) {
-        this.tempMin = tempMin;
+    public void setTemp_Min(double temp_Min) {
+        this.temp_Min = temp_Min;
     }
 
-    public Double getTempMax() {
-        return tempMax;
+    public double getTemp_Max() {
+        return temp_Max;
     }
 
-    public void setTempMax(Double tempMax) {
-        this.tempMax = tempMax;
+    public void setTemp_Max(double temp_Max) {
+        this.temp_Max = temp_Max;
     }
-
 }

@@ -26,6 +26,7 @@ public class ListWeatherAdapter extends BaseAdapter {
     public ListWeatherAdapter(List<Lweather> weatherList) {
         mWeatherList = weatherList;
 
+
     }
 
     @Override
@@ -45,11 +46,13 @@ public class ListWeatherAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+
         ViewHolder holder;
 
         if (view == null) {
             holder = new ViewHolder();
             view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_wether, viewGroup, false);
+            holder.name = view.findViewById(R.id.city_name_text);
             holder.temp = view.findViewById(R.id.temp_text_view);
             holder.max = view.findViewById(R.id.max_temp_text_view);
             holder.min = view.findViewById(R.id.mim_temp_text_view);
@@ -57,14 +60,16 @@ public class ListWeatherAdapter extends BaseAdapter {
 
             view.setTag(holder);
         } else {
+
             holder = (ViewHolder) view.getTag();
         }
 
         Lweather weatherList = (Lweather) getItem(i);
-        holder.temp.setText("기온 : " + weatherList.getMain().getTemp());
-        holder.min.setText("최저 기온 : " + weatherList.getMain().getTempMin());
-        holder.max.setText("최고 기온 : " + weatherList.getMain().getTempMax());
-        holder.weather.setText("습도 : " + weatherList.getMain().getHumidity());
+        holder.name.setText("" + weatherList.getName());
+        holder.temp.setText("" + weatherList.getMain().getTemp());
+        holder.min.setText("" + weatherList.getMain().getTemp_Min());
+        holder.max.setText("" + weatherList.getMain().getTemp_Max());
+        holder.weather.setText("" + weatherList.getMain().getHumidity());
 
         return view;
 
@@ -72,6 +77,7 @@ public class ListWeatherAdapter extends BaseAdapter {
     }
 
     private static class ViewHolder {
+        TextView name;
         TextView temp;
         TextView min;
         TextView max;
