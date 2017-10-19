@@ -59,7 +59,6 @@ public class ListWeatherAdapter extends BaseAdapter {
             holder.temp = view.findViewById(R.id.temp_text_view);
             holder.max = view.findViewById(R.id.max_temp_text_view);
             holder.min = view.findViewById(R.id.mim_temp_text_view);
-            holder.weather = view.findViewById(R.id.weather_text_view);
 
             view.setTag(holder);
         } else {
@@ -75,7 +74,6 @@ public class ListWeatherAdapter extends BaseAdapter {
         holder.temp.setText("" + weatherList.getMain().getTemp());
         holder.min.setText("" + weatherList.getMain().getTemp_Min());
         holder.max.setText("" + weatherList.getMain().getTemp_Max());
-        holder.weather.setText("" + weatherList.getMain().getHumidity());
 
         return view;
 
@@ -89,6 +87,5 @@ public class ListWeatherAdapter extends BaseAdapter {
         TextView temp;
         TextView min;
         TextView max;
-        TextView weather;
     }
 }

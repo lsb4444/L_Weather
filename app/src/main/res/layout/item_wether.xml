@@ -70,10 +70,7 @@
                         android:text="최저기온" />
 
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="습도" />
+
 
 
                 </LinearLayout>
@@ -102,11 +99,6 @@
                         android:layout_height="wrap_content"
                         android:text="ddddd" />
 
-                    <TextView
-                        android:id="@+id/weather_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ddddd" />
 
 
                 </LinearLayout>

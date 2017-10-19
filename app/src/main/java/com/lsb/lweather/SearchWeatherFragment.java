@@ -90,9 +90,19 @@ public class SearchWeatherFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), NewActivity.class);
 
+                intent.putExtra("city", city);
+
                 startActivity(intent);
 
 
+            }
+        });
+
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                return false;
             }
         });
 
