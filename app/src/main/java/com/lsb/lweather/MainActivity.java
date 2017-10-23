@@ -18,14 +18,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (savedInstanceState == null) {
-//            mSerc = new SearchWeatherFragment();
             mSerc = getSupportFragmentManager().findFragmentById(R.id.frag);
 
 
-            // 왜 겹칠까
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.frag, mSerc)
-//                    .commit();
         }
 
 

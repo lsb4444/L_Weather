@@ -1,6 +1,7 @@
 package com.lsb.lweather;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lsb.lweather.viewPage.fragment.NowFragment;
 import com.lsb.lweather.viewPage.fragment.OneWeekFragment;
@@ -17,6 +20,8 @@ import com.lsb.lweather.viewPage.fragment.OneWeekFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static android.R.attr.fragment;
 
 
 /**
@@ -32,10 +37,12 @@ public class NowWeatherFragment extends Fragment {
     TabLayout mTabLayout;
 
 
+    static String mSetCity;
+
+
     public NowWeatherFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,9 +53,10 @@ public class NowWeatherFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
 
 
-
         mViewPager.setAdapter(new MyViewPager(getFragmentManager()));
+
         // tabLayout과 ViewPager 연결
+
         mTabLayout.setupWithViewPager(mViewPager);
 
 
@@ -57,9 +65,13 @@ public class NowWeatherFragment extends Fragment {
 
     }
 
-    private static class MyViewPager extends FragmentPagerAdapter {
 
-        public static final int PAGE_NUM = 2;
+    private static class MyViewPager extends FragmentPagerAdapter {
+//
+//        private NowFragment mNowFrag = new NowFragment();
+        private OneWeekFragment mOneWeekFrag = new OneWeekFragment();
+
+        private static final int PAGE_NUM = 2;
 
         public MyViewPager(FragmentManager fm) {
             super(fm);
@@ -69,9 +81,9 @@ public class NowWeatherFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new NowFragment();
+                    return NowFragment.newInstance(mSetCity);
                 case 1:
-                    return new OneWeekFragment();
+                    return mOneWeekFrag;
             }
 
 
@@ -101,5 +113,14 @@ public class NowWeatherFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+
+    public String getmSetCity() {
+        return mSetCity;
+    }
+
+    public void setmSetCity(String mSetCity) {
+        this.mSetCity = mSetCity;
     }
 }
