@@ -16,9 +16,10 @@
 
 
             <ImageView
-                android:id="@+id/item_image_view"
+                android:id="@+id/one_week_image_view"
                 android:layout_width="100dp"
-                android:layout_height="100dp" />
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp" />
         </LinearLayout>
 
 
@@ -29,22 +30,11 @@
             android:layout_marginRight="8dp"
             android:orientation="vertical">
 
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
-
-                <TextView
-                    android:id="@+id/city_name_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="지역" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_marginTop="8dp">
 
 
                 <LinearLayout
@@ -68,6 +58,15 @@
                         android:layout_height="wrap_content"
                         android:text="최저기온" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="날씨" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="시간" />
 
                 </LinearLayout>
 
@@ -78,19 +77,31 @@
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/temp_text_view"
+                        android:id="@+id/one_week_temp_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="" />
 
                     <TextView
-                        android:id="@+id/max_temp_text_view"
+                        android:id="@+id/one_week_max_temp_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="" />
 
                     <TextView
-                        android:id="@+id/mim_temp_text_view"
+                        android:id="@+id/one_week_mim_temp_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+
+                    <TextView
+                        android:id="@+id/one_week_weather_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+
+                    <TextView
+                        android:id="@+id/one_week_time_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="" />
@@ -102,4 +113,8 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="#e8e8e8" />
 </LinearLayout>

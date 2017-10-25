@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
 
-import static android.R.attr.fragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -19,8 +18,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             mSerc = getSupportFragmentManager().findFragmentById(R.id.frag);
-
-
         }
 
 

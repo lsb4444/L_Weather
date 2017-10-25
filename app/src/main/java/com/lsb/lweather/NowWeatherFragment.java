@@ -67,9 +67,6 @@ public class NowWeatherFragment extends Fragment {
 
 
     private static class MyViewPager extends FragmentPagerAdapter {
-//
-//        private NowFragment mNowFrag = new NowFragment();
-        private OneWeekFragment mOneWeekFrag = new OneWeekFragment();
 
         private static final int PAGE_NUM = 2;
 
@@ -83,7 +80,7 @@ public class NowWeatherFragment extends Fragment {
                 case 0:
                     return NowFragment.newInstance(mSetCity);
                 case 1:
-                    return mOneWeekFrag;
+                    return OneWeekFragment.newInstance(mSetCity);
             }
 
 

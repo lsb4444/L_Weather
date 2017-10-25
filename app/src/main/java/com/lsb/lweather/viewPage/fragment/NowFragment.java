@@ -1,8 +1,10 @@
 package com.lsb.lweather.viewPage.fragment;
 
 
-import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,14 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lsb.lweather.NewActivity;
+import com.bumptech.glide.Glide;
 import com.lsb.lweather.R;
 import com.lsb.lweather.models.nowWeather.Lweather;
 import com.lsb.lweather.retrofit.WeatherUtil;
 
-import org.w3c.dom.Text;
-
-import java.util.List;
+import java.io.InputStream;
+import java.net.URL;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +44,8 @@ public class NowFragment extends Fragment {
     private WeatherUtil mWeatherUtil;
 
     public String mNowCityName;
+
+
 
 
     public static NowFragment newInstance(String city) {
@@ -82,6 +85,8 @@ public class NowFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+
+
         mIcon = (ImageView) getActivity().findViewById(R.id.now_icon_frag);
 
         mCityName = (TextView) getView().findViewById(R.id.now_city_name_frag);
@@ -95,13 +100,42 @@ public class NowFragment extends Fragment {
         mWeather = (TextView) getView().findViewById(R.id.now_weather_main);
 
         mWeatherUtil = new WeatherUtil();
+        final Handler handle = new Handler();
 
-
-        mWeatherUtil.getmApiService().getLweather(mNowCityName).enqueue(new Callback<Lweather>() {
+        mWeatherUtil.getmApiService().getLweatherID(mNowCityName).enqueue(new Callback<Lweather>() {
             @Override
             public void onResponse(Call<Lweather> call, Response<Lweather> response) {
 
                 Lweather lweather = response.body();
+
+
+                final String iconUrl = "http://openweathermap.org/img/w/" +
+                        lweather.getWeather().get(0).getIcon() + ".png";
+                Glide.with(getContext()).load(iconUrl).into(mIcon);
+
+
+
+//                Thread t = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // TODO Auto-generated method stub
+//                        try{
+//
+//                        } catch(final Exception e){
+//                            handle.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                        }
+//
+//                    }
+//                });
+
+//                t.start();
+
+
 
                 mCityName.setText(""+lweather.getName());
                 mTemp.setText(""+lweather.getMain().getTemp());

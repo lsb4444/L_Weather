@@ -5,7 +5,7 @@ package com.lsb.lweather.models.nowWeather;
 public class Wind {
 
     private Double speed;
-    private Integer deg;
+    private double deg;
 
     public Double getSpeed() {
         return speed;
@@ -15,7 +15,7 @@ public class Wind {
         this.speed = speed;
     }
 
-    public Integer getDeg() {
+    public double getDeg() {
         return deg;
     }
 

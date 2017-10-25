@@ -37,7 +37,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchWeatherFragment extends Fragment {
+public class SearchWeatherFragment extends Fragment{
 
 
     @BindView(R.id.image_view)
@@ -48,6 +48,7 @@ public class SearchWeatherFragment extends Fragment {
     Button mSearchFragmentButton;
     @BindView(R.id.list_view)
     ListView mListView;
+
     Unbinder unbinder;
     private WeatherUtil mWeatherUtil;
 
@@ -60,6 +61,7 @@ public class SearchWeatherFragment extends Fragment {
     public SearchWeatherFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -82,7 +84,7 @@ public class SearchWeatherFragment extends Fragment {
 
 
                 //지역 이름 가져오기
-                String city = ((Lweather) mAdapter.getItem(i)).getName();
+                String city = String.valueOf(((Lweather) mAdapter.getItem(i)).getId());
 
                 Intent intent = new Intent(getActivity(), NewActivity.class);
 

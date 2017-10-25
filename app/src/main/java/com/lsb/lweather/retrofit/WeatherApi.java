@@ -1,11 +1,6 @@
 package com.lsb.lweather.retrofit;
-
-import android.location.Location;
-
+import com.lsb.lweather.models.OneWeeWeather.OneWeeWeather;
 import com.lsb.lweather.models.nowWeather.Lweather;
-import com.lsb.lweather.models.nowWeather.Weather;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -17,4 +12,13 @@ public interface WeatherApi {
 
     @GET("weather?lang=kr&units=metric&appid=" + APP_ID)
     Call<Lweather> getLweather(@Query("q") String cityName);
+
+    @GET("forecast?lang=kr&units=metric&appid=" + APP_ID)
+    Call<OneWeeWeather> getOneWeekLweather(@Query("q") String cityName);
+
+    @GET("weather?lang=kr&units=metric&appid=" + APP_ID)
+    Call<Lweather> getLweatherID(@Query("id") String cityName);
+
+    @GET("forecast?lang=kr&units=metric&appid=" + APP_ID)
+    Call<OneWeeWeather> getOneWeekLweatherID(@Query("id") String cityName);
 }

@@ -21,7 +21,6 @@ public class NewActivity extends AppCompatActivity {
     private NowWeatherFragment mFrag;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

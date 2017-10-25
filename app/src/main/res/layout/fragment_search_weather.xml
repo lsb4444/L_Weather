@@ -31,10 +31,10 @@
                 android:inputType="text" />
 
             <Button
-                android:onClick="search_button"
                 android:id="@+id/search_fragment_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="search_button"
                 android:text="검 색" />
         </LinearLayout>
 
@@ -42,10 +42,9 @@
         <ListView
             android:id="@+id/list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </ListView>
-
+            android:layout_height="wrap_content"
+            android:divider="#7e7e7e"
+            android:dividerHeight="1dp"></ListView>
 
     </LinearLayout>
 

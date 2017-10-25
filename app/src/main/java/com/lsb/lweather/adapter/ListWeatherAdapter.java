@@ -1,6 +1,5 @@
 package com.lsb.lweather.adapter;
 
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.lsb.lweather.R;
 import com.lsb.lweather.models.nowWeather.Lweather;
-import com.lsb.lweather.models.nowWeather.Main;
 
 import java.util.List;
 

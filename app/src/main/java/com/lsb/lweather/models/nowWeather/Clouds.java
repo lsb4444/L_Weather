@@ -4,9 +4,9 @@ package com.lsb.lweather.models.nowWeather;
 
 public class Clouds {
 
-    private Integer all;
+    private double all;
 
-    public Integer getAll() {
+    public double getAll() {
         return all;
     }
 
