@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.lsb.lweather.adapter.ListWeatherAdapter;
+import com.lsb.lweather.models.RealmCityName;
 import com.lsb.lweather.models.nowWeather.Lweather;
 import com.lsb.lweather.retrofit.WeatherUtil;
 
@@ -29,6 +30,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,7 +40,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchWeatherFragment extends Fragment{
+public class SearchWeatherFragment extends Fragment {
 
 
     @BindView(R.id.image_view)
@@ -55,13 +58,11 @@ public class SearchWeatherFragment extends Fragment{
     private List<Lweather> mWeatherList = new ArrayList<>();
     private ListWeatherAdapter mAdapter;
 
-
-
+    private Realm mRealm;
 
     public SearchWeatherFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -70,18 +71,64 @@ public class SearchWeatherFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_weather, container, false);
         unbinder = ButterKnife.bind(this, view);
+        mWeatherUtil = new WeatherUtil();
 
+        mRealm=Realm.getDefaultInstance();
 
         mAdapter = new ListWeatherAdapter(mWeatherList);
-
-
         mListView.setAdapter(mAdapter);
 
 
+        ClickCityName();
+
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                return false;
+            }
+        });
+
+
+        RealmCheck();
+
+        kyboard_search();
+        return view;
+
+    }
+
+    private void RealmCheck() {
+        if (mRealm != null) {
+            RealmResults<RealmCityName> realmCity = mRealm.where(RealmCityName.class).findAll();
+            for (int i = 1; i < realmCity.size()+1; i++) {
+
+                RealmCityName realmCity2 = mRealm.where(RealmCityName.class).equalTo("Id", i).findFirst();
+                String city_name = realmCity2.getCityName();
+
+                mWeatherUtil.getmApiService().getLweather(city_name).enqueue(new Callback<Lweather>() {
+
+                    @Override
+                    public void onResponse(Call<Lweather> call, Response<Lweather> response) {
+
+                        Lweather lweather = response.body();
+                        mWeatherList.add(lweather);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Lweather> call, Throwable t) {
+                        Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void ClickCityName() {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
 
                 //지역 이름 가져오기
                 String city = String.valueOf(((Lweather) mAdapter.getItem(i)).getId());
@@ -92,19 +139,12 @@ public class SearchWeatherFragment extends Fragment{
 
                 startActivity(intent);
 
-
             }
         });
+    }
 
 
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                return false;
-            }
-        });
-
-
+    private void kyboard_search() {
         mSearchEditText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
@@ -122,22 +162,9 @@ public class SearchWeatherFragment extends Fragment{
                 return false;
             }
         });
-
-
-        return view;
-
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mWeatherUtil = new WeatherUtil();
-
-    }
-
-
-    private void search(String cityName) {
+    private void search(final String cityName) {
 
         mWeatherUtil.getmApiService().getLweather(cityName).enqueue(new Callback<Lweather>() {
 
@@ -146,7 +173,6 @@ public class SearchWeatherFragment extends Fragment{
 
                 Lweather lweather = response.body();
                 mWeatherList.add(lweather);
-
                 mAdapter.notifyDataSetChanged();
 
             }
@@ -156,6 +182,26 @@ public class SearchWeatherFragment extends Fragment{
                 Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Number currentIdNum = realm.where(RealmCityName.class).max("Id");
+                final int firstId = 1;
+                int Id;
+
+                if (currentIdNum == null) {
+                    Id = firstId;
+                } else {
+                    Id = currentIdNum.intValue() + 1;
+                }
+
+                RealmCityName name = realm.createObject(RealmCityName.class, Id);
+                name.setCityName(cityName);
+            }
+        });
+
+
     }
 
     @Override
@@ -176,6 +222,10 @@ public class SearchWeatherFragment extends Fragment{
 
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
+    }
 }
 
