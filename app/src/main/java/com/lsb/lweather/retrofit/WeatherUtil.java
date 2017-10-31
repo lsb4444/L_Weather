@@ -14,7 +14,6 @@ public class WeatherUtil {
 
     public WeatherUtil() {
 
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(WeatherApi.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

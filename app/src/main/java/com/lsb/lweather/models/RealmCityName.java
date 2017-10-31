@@ -10,7 +10,7 @@ import io.realm.annotations.PrimaryKey;
 public class RealmCityName extends RealmObject{
 
     @PrimaryKey
-    private Integer Id = null;
+    private int Id;
 
     private String cityName;
 
@@ -22,11 +22,11 @@ public class RealmCityName extends RealmObject{
         this.cityName = cityName;
     }
 
-    public Integer getId() {
+    public int getId() {
         return Id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         Id = id;
     }
 }

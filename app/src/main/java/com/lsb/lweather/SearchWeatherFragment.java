@@ -6,8 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -31,6 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,44 +78,69 @@ public class SearchWeatherFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         mWeatherUtil = new WeatherUtil();
 
-        mRealm=Realm.getDefaultInstance();
+        mRealm = Realm.getDefaultInstance();
 
         mAdapter = new ListWeatherAdapter(mWeatherList);
         mListView.setAdapter(mAdapter);
 
-
         ClickCityName();
 
-
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                return false;
-            }
-        });
-
-
+        // 저장되어 있는지 체크
         RealmCheck();
 
+        // 키보드 서치
         kyboard_search();
+
+        // 메뉴와 리스트뷰 연결
+        registerForContextMenu(mListView);
+
+
         return view;
 
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.list_menu, menu);
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final Lweather cityName = (Lweather) mListView.getAdapter().getItem(info.position);
+        final RealmCityName results = mRealm.where(RealmCityName.class).equalTo("cityName", cityName.getName()).findFirst();
+        switch (item.getItemId()) {
+            case R.id.action_item1:
+                mWeatherList.remove(info.position);
+
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        results.deleteFromRealm();
+                    }
+                });
+                mAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.action_item2:
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
     private void RealmCheck() {
         if (mRealm != null) {
-            RealmResults<RealmCityName> realmCity = mRealm.where(RealmCityName.class).findAll();
-            for (int i = 1; i < realmCity.size()+1; i++) {
+            final RealmResults<RealmCityName> realmCity = mRealm.where(RealmCityName.class).findAll();
 
-                RealmCityName realmCity2 = mRealm.where(RealmCityName.class).equalTo("Id", i).findFirst();
-                String city_name = realmCity2.getCityName();
-
+            for (RealmCityName realmCityName : realmCity) {
+                String city_name = realmCityName.getCityName();
                 mWeatherUtil.getmApiService().getLweather(city_name).enqueue(new Callback<Lweather>() {
-
                     @Override
                     public void onResponse(Call<Lweather> call, Response<Lweather> response) {
-
                         Lweather lweather = response.body();
                         mWeatherList.add(lweather);
                     }
@@ -168,36 +198,38 @@ public class SearchWeatherFragment extends Fragment {
 
         mWeatherUtil.getmApiService().getLweather(cityName).enqueue(new Callback<Lweather>() {
 
-            @Override
-            public void onResponse(Call<Lweather> call, Response<Lweather> response) {
 
-                Lweather lweather = response.body();
+            @Override
+            public void onResponse(Call<Lweather> call, final Response<Lweather> response) {
+
+                final Lweather lweather = response.body();
                 mWeatherList.add(lweather);
                 mAdapter.notifyDataSetChanged();
 
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Number currentIdNum = realm.where(RealmCityName.class).max("Id");
+                        final int firstId = 0;
+                        int Id;
+
+                        if (currentIdNum == null) {
+                            Id = firstId;
+                        } else {
+                            Id = currentIdNum.intValue() + 1;
+                        }
+
+                        RealmCityName name = realm.createObject(RealmCityName.class, Id);
+                        name.setCityName(lweather.getName());
+
+
+                    }
+                });
             }
 
             @Override
             public void onFailure(Call<Lweather> call, Throwable t) {
                 Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mRealm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Number currentIdNum = realm.where(RealmCityName.class).max("Id");
-                final int firstId = 1;
-                int Id;
-
-                if (currentIdNum == null) {
-                    Id = firstId;
-                } else {
-                    Id = currentIdNum.intValue() + 1;
-                }
-
-                RealmCityName name = realm.createObject(RealmCityName.class, Id);
-                name.setCityName(cityName);
             }
         });
 
