@@ -18,7 +18,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (savedInstanceState == null) {
-            mSerc = getSupportFragmentManager().findFragmentById(R.id.frag);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new SearchWeatherFragment())
+                    .commit();
         }
 
     }

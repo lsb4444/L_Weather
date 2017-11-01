@@ -2,7 +2,10 @@ package com.lsb.lweather;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -64,11 +67,12 @@ public class SearchWeatherFragment extends Fragment {
     private ListWeatherAdapter mAdapter;
 
     private Realm mRealm;
+    private NetworkInfo mMobile1;
+    private NetworkInfo mWifi;
 
     public SearchWeatherFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +86,12 @@ public class SearchWeatherFragment extends Fragment {
 
         mAdapter = new ListWeatherAdapter(mWeatherList);
         mListView.setAdapter(mAdapter);
+
+        // 인터넷 체크
+        ConnectivityManager manager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        mMobile1 = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        mWifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
 
         ClickCityName();
 
@@ -97,6 +107,11 @@ public class SearchWeatherFragment extends Fragment {
 
         return view;
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -133,25 +148,28 @@ public class SearchWeatherFragment extends Fragment {
     }
 
     private void RealmCheck() {
-        if (mRealm != null) {
-            final RealmResults<RealmCityName> realmCity = mRealm.where(RealmCityName.class).findAll();
+        if (mWifi.isConnected() || mMobile1.isConnected()) {
+            if (mRealm != null) {
+                final RealmResults<RealmCityName> realmCity = mRealm.where(RealmCityName.class).findAll();
 
-            for (RealmCityName realmCityName : realmCity) {
-                String city_name = realmCityName.getCityName();
-                mWeatherUtil.getmApiService().getLweather(city_name).enqueue(new Callback<Lweather>() {
-                    @Override
-                    public void onResponse(Call<Lweather> call, Response<Lweather> response) {
-                        Lweather lweather = response.body();
-                        mWeatherList.add(lweather);
-                    }
-
-                    @Override
-                    public void onFailure(Call<Lweather> call, Throwable t) {
-                        Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                for (RealmCityName realmCityName : realmCity) {
+                    String city_name = realmCityName.getCityName();
+                    mWeatherUtil.getmApiService().getLweather(city_name).enqueue(new Callback<Lweather>() {
+                        @Override
+                        public void onResponse(Call<Lweather> call, Response<Lweather> response) {
+                            Lweather lweather = response.body();
+                            mWeatherList.add(lweather);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                        @Override
+                        public void onFailure(Call<Lweather> call, Throwable t) {
+                            Toast.makeText(getContext(), "정확한 도시 이름을 입력 해 주세요", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
-            mAdapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(getContext(), "인터넷을 연결 해 주세요", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -159,7 +177,6 @@ public class SearchWeatherFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                 //지역 이름 가져오기
                 String city = String.valueOf(((Lweather) mAdapter.getItem(i)).getId());
 
@@ -168,7 +185,6 @@ public class SearchWeatherFragment extends Fragment {
                 intent.putExtra("city", city);
 
                 startActivity(intent);
-
             }
         });
     }
@@ -202,34 +218,40 @@ public class SearchWeatherFragment extends Fragment {
             @Override
             public void onResponse(Call<Lweather> call, final Response<Lweather> response) {
 
-                final Lweather lweather = response.body();
-                mWeatherList.add(lweather);
-                mAdapter.notifyDataSetChanged();
+                if (mWifi.isConnected() || mMobile1.isConnected()) {
+                    if (response.body() != null) {
+                        final Lweather lweather = response.body();
+                        mWeatherList.add(lweather);
+                        mAdapter.notifyDataSetChanged();
 
-                mRealm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        Number currentIdNum = realm.where(RealmCityName.class).max("Id");
-                        final int firstId = 0;
-                        int Id;
+                        mRealm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                Number currentIdNum = realm.where(RealmCityName.class).max("Id");
+                                final int firstId = 0;
+                                int Id;
 
-                        if (currentIdNum == null) {
-                            Id = firstId;
-                        } else {
-                            Id = currentIdNum.intValue() + 1;
-                        }
+                                if (currentIdNum == null) {
+                                    Id = firstId;
+                                } else {
+                                    Id = currentIdNum.intValue() + 1;
+                                }
 
-                        RealmCityName name = realm.createObject(RealmCityName.class, Id);
-                        name.setCityName(lweather.getName());
-
-
+                                RealmCityName name = realm.createObject(RealmCityName.class, Id);
+                                name.setCityName(lweather.getName());
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "정확한 도시 이름을 입력 해 주세요", Toast.LENGTH_SHORT).show();
                     }
-                });
+                } else {
+                    Toast.makeText(getContext(), "인터넷을 연결 해 주세요", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onFailure(Call<Lweather> call, Throwable t) {
-                Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "에러가 발생 하였습니다.", Toast.LENGTH_SHORT).show();
             }
         });
 
